@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue</title>
+	<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<ul>
+			<li v-for="(value,index) in arr">{{index}}-{{value}}</li>
+		</ul>
+		<ul>
+			<li v-for="(value,key,index) in json">{{key}}-{{value}}-{{index}}</li>
+		</ul>
+		<input type="button" @click="btn" value="btn">
+	</div>
+
+	<script type="text/javascript">
+		new Vue({
+			el:'#app',
+			data:{
+				arr:['apple','bnanana','orage','pear'],
+				json:{a:'apple',b:'banana',c:'pear'}
+			},
+			methods:{
+				btn(){
+					this.arr.push('yali')
+				}
+			}
+		})
+	</script>
+</body>
+</html>

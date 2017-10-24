@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue</title>
+	<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../store/store.js"></script>
+</head>
+<body>
+
+		<div class="container" id="box">
+			<form role="form">
+				<div class="form-group">
+					<label for="username" class="text-info">用户名</label>
+					<input type="text" id="username" class="form-control" v-model="username">
+				</div>
+				<div class="form-group">
+					<label for="age" class="text-info">年龄</label>
+					<input type="text" id="age" class="form-control" v-model="age">
+				</div>
+				<div class="form-group">
+					<input type="button" value="添加" class="btn btn-primary" @click="add">
+					<input type="button" value="重置" class="btn btn-primary" @click="reset">
+				</div>
+			</form>
+			<hr>
+			<table class="table table-hover">
+				<caption class="h2 text-info text-center">用户信息表</caption>
+				<tr class="text-info">
+					<td class="text-center">序号</td>
+					<td class="text-center">名字</td>
+					<td class="text-center">年龄</td>
+					<td class="text-center">操作</td>
+				</tr>
+				<tr class="text-center" v-for="(item,index) in myData">
+					<td>{{index+1}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.age}}</td>
+					<td>
+						<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#layer" @click="del(index)">删除</button>
+					</td>
+				</tr>
+				<tr v-show="myData.length!=0">
+					<td colspan="4" class="text-center">
+						<button class="btn btn-danger btn-sm" @click="delAll">全部删除</button>
+					</td>
+				</tr>
+				<tr v-show="myData.length===0">
+					<td colspan="4" class="text-center">
+						<p class="text-info">暂无数据</p>
+					</td>
+				</tr>
+			</table>
+
+			<!-- 弹出框 -->
+			<div role="dialog" class="modal fade" id="layer">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span>&times</span>
+							</button>
+							<h5 class="modal-title text-danger">确认删除吗？</h5>
+						</div>
+						<div class="modal-body text-right">
+							<button class="btn btn-primary btn-sm btn-danger" data-dismiss="modal">取消</button>
+							<button class="btn btn-primary btn-sm" data-dismiss="modal" @click="submit">确认</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<script type="text/javascript">
+		new Vue({
+			el:'#box',
+			data:{
+				myData:[],
+				username:'',
+				age:'',
+				nowIndex:-1000
+			},
+			created:function(){
+				this.myData=store.get('myData');
+				console.log(store.get('myData'));
+			},
+			methods:{
+				add(){
+					this.myData.push({
+						name:this.username,
+						age:this.age
+					})
+					store.set("myData",this.myData);
+					this.username="";
+					this.age="";
+					this.myData=store.get('myData');
+				},
+				reset(){
+					this.username='';
+					this.age="";
+				},
+				del(index){
+					this.nowIndex=index;
+				},
+				submit(){
+					this.myData.splice(this.nowIndex,1);
+					store.set("myData",this.myData);
+				},
+				delAll(){
+					this.myData=[];
+					store.set("myData",this.myData);
+				}
+			}
+		})
+	</script>
+</body>
+</html>
